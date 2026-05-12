@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.4",
-    "bip39": "^3.1.0",
     "framer-motion": "^12.38.0",
     "locomotive-scroll": "^5.0.1",
     "react": "^19.2.5",
