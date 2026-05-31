@@ -10,6 +10,7 @@ import {
   LocomotiveProvider,
   MarketplaceReveal,
 } from "../components";
+import { HeroFooter } from "../components/LandingHero";
 
 const ONBOARDING_STEPS = [
   {
@@ -55,7 +56,7 @@ export default function LandingPage() {
         <MarketplaceReveal />
         <LandingFeatures />
         <section className="relative mx-auto px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-[40px] p-6 sm:p-10 lg:p-12">
+          <div className="relative overflow-hidden rounded-[40px] p-6 sm: lg:p-12">
             
 
             <div className="relative z-[1] ">
@@ -128,6 +129,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        <HeroFooter />
       </main>
     </LocomotiveProvider>
   );

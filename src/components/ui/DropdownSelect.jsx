@@ -6,6 +6,7 @@ export default function DropdownSelect({
   onChange,
   options,
   placeholder = "Select option",
+  className = "",
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
@@ -25,12 +26,12 @@ export default function DropdownSelect({
   );
 
   return (
-    <div className="relative mt-2" ref={rootRef}>
+    <div className="relative" ref={rootRef}>
       <button
         type="button"
         onClick={() => setOpen((p) => !p)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm font-semibold outline-none focus:border-[#26b69c] dark:border-gray-800"
+        className={`flex w-full items-center justify-between rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm font-semibold outline-none focus:border-[#26b69c] dark:border-gray-800 ${className}`}
       >
         <span className="truncate text-left">
           {selected?.label ?? placeholder}

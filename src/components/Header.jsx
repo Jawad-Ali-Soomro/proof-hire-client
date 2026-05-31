@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   PiArrowRight,
   PiArrowUpRightDuotone,
+  PiCheck,
   PiLinkBreakDuotone,
   PiList,
   PiMoonDuotone,
@@ -35,14 +36,20 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { connectWallet, address, isConnected, wallet, disconnectWallet } =
-    useWallet();
+  const {
+    connectWallet,
+    address,
+    accounts,
+    isConnected,
+    wallet,
+    disconnectWallet,
+    switchAccount,
+    refreshAuthorizedAccounts,
+  } = useWallet();
   const { loading: authLoading, profileComplete } = useAuth();
 
   const [showWallets, setShowWallets] = useState(false);
   const [showWalletMenu, setShowWalletMenu] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState(null);
-  const [availableWallets, setAvailableWallets] = useState([]);
   const [nativeBalanceHex, setNativeBalanceHex] = useState(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
 
@@ -64,12 +71,7 @@ const Header = () => {
       console.error(error);
     }
   };
-
-  const openConnectModal = () => {
-    setAvailableWallets(getAvailableWallets());
-    setShowWallets(true);
-  };
-
+ 
   const openProfileDestination = () => {
     if (authLoading) return;
     if (profileComplete) navigate("/dashboard");
@@ -108,12 +110,18 @@ const Header = () => {
   }, [address, resolveInjectedProvider]);
 
   const toggleWalletMenu = () => {
-    setShowWalletMenu((prev) => {
-      const next = !prev;
-      if (next) void refreshWalletBalance();
-      return next;
-    });
+    setShowWalletMenu((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (!showWalletMenu) return;
+    void refreshAuthorizedAccounts();
+  }, [showWalletMenu, refreshAuthorizedAccounts]);
+
+  useEffect(() => {
+    if (!showWalletMenu || !address) return;
+    void refreshWalletBalance();
+  }, [showWalletMenu, address, refreshWalletBalance]);
 
   useEffect(() => {
     if (!showWalletMenu) return;
@@ -261,6 +269,46 @@ const Header = () => {
                       </p>
                     </div>
 
+                    {accounts.length ? (
+                      <div className="border-t border-gray-200 px-3 py-2.5 dark:border-gray-700">
+                        <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                          {accounts.length > 1 ? "Switch account" : "Account"}
+                        </p>
+                        <div className="flex max-h-40 flex-col gap-1 overflow-y-auto">
+                          {accounts.map((acc) => {
+                            const active =
+                              address && acc.toLowerCase() === address.toLowerCase();
+                            return (
+                              <button
+                                key={acc}
+                                type="button"
+                                role="menuitem"
+                                onClick={() => {
+                                  switchAccount(acc);
+                                  setShowWalletMenu(false);
+                                }}
+                                className={`flex w-full items-center justify-between gap-2 rounded-xl px-2.5 py-2 text-left text-xs font-semibold font-mono transition ${
+                                  active
+                                    ? "bg-[#26b69c]/15 text-[#156b59] dark:text-[#56d9c0]"
+                                    : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                                }`}
+                              >
+                                <span className="min-w-0 truncate">
+                                  {acc.slice(0, 6)}…{acc.slice(-4)}
+                                </span>
+                                {active ? <PiCheck className="shrink-0" size={16} aria-hidden /> : null}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {accounts.length > 1 ? (
+                          <p className="mt-2 text-[10px] leading-snug text-gray-500 dark:text-gray-400">
+                            Use another address? Connect it in your wallet, then open this menu again to refresh the list.
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : null}
+
                     <div className="flex flex-col gap-0 border-t border-gray-200 dark:border-gray-700">
                       <button
                         type="button"
@@ -318,85 +366,18 @@ const Header = () => {
             ) : (
               <motion.button
                 type="button"
-                onClick={openConnectModal}
+                onClick={() => navigate('/login')}
                 className="flex h-12 min-w-[150px] items-center justify-center gap-2 rounded-full bg-[#26b69c] px-5 font-bold text-white"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={iconTransition}
               >
-                Connect
+                Let's Start!
               </motion.button>
             )}
           </div>
         </div>
       </h1>
-
-      {/* Wallet Modal */}
-      {showWallets && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-[20px] p-5 flex flex-col gap-4">
-            {/* Header */}
-            <div className="flex justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
-              <p className="font-bold">Connect Wallet</p>
-              <button onClick={() => setShowWallets(false)}>
-                <PiX />
-              </button>
-            </div>
-
-            {/* Wallets */}
-            <div className="flex flex-col gap-3">
-              {availableWallets.map((wallet) => {
-                const isSelected = selectedWallet?.name === wallet.name;
-
-                return (
-                  <button
-                    key={wallet.name}
-                    onClick={async () => {
-                      setSelectedWallet(wallet);
-                      await connectWallet(wallet);
-                      setShowWallets(false);
-                    }}
-                    className={`flex justify-between items-center px-5 py-3 rounded-full border ${
-                      isSelected
-                        ? "border-[#26b69c] bg-[#26b69c]/10"
-                        : "border-gray-200 dark:border-gray-700"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <img src={wallet.icon} className="w-8 h-8" />
-                      <p className="text-sm font-semibold">{wallet.name}</p>
-                    </div>
-
-                    <input type="radio" checked={isSelected} readOnly />
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Recommended */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-              <p className="text-xs text-center capitalize font-semibold mb-3">
-                Looking for another wallet?
-              </p>
-
-              <div className="grid grid-cols-3 gap-2">
-                {RECOMMENDED_WALLETS.map((wallet) => (
-                  <a
-                    key={wallet.name}
-                    href={wallet.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 border p-2 border-gray-200 dark:border-gray-700 rounded-full"
-                  >
-                    <img src={wallet.icon} className="w-6 h-6" />
-                    <span className="text-[10px] font-bold">{wallet.name}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

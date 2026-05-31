@@ -1,29 +1,33 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/dashboard/Sidebar.jsx";
 import Topbar from "../components/dashboard/Topbar.jsx";
 import Header from "../components/Header.jsx";
+import ConnectWalletModal from "../components/wallet/ConnectWalletModal.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useWallet } from "../context/WalletContext.jsx";
+import { SidebarProvider, useSidebar } from "../context/SidebarContext.jsx";
+import { NotificationsProvider } from "../context/NotificationsContext.jsx";
+import { ChatSocketProvider } from "../context/ChatSocketContext.jsx";
 
 export default function AuthLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isConnected, disconnectWallet } = useWallet();
-  const { loading, profileComplete, logoutSession } = useAuth();
+  const { disconnectWallet } = useWallet();
+  const { loading, isAuthenticated, profileComplete, logoutSession } = useAuth();
 
   useEffect(() => {
-    if (!loading && !isConnected) {
-      navigate("/", { replace: true });
+    if (!loading && !isAuthenticated) {
+      navigate("/login", { replace: true });
     }
-  }, [loading, isConnected, navigate]);
+  }, [loading, isAuthenticated, navigate]);
 
   useEffect(() => {
-    if (loading || !isConnected) return;
+    if (loading || !isAuthenticated) return;
     if (!profileComplete && location.pathname !== "/dashboard/onboarding") {
       navigate("/dashboard/onboarding", { replace: true });
     }
-  }, [loading, isConnected, profileComplete, location.pathname, navigate]);
+  }, [loading, isAuthenticated, profileComplete, location.pathname, navigate]);
 
   const profileLabel = useMemo(
     () => (profileComplete ? "Profile / Dashboard" : "Complete profile"),
@@ -37,10 +41,12 @@ export default function AuthLayout() {
   const onLogout = () => {
     logoutSession();
     disconnectWallet();
-    navigate("/", { replace: true });
+    navigate("/login", { replace: true });
   };
 
-  if (!loading && isConnected && !profileComplete) {
+  if (loading) return null;
+
+  if (isAuthenticated && !profileComplete) {
     return (
       <>
         <Header />
@@ -50,19 +56,49 @@ export default function AuthLayout() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-gray-900">
-      <div className="flex">
-        <Sidebar />
-
-        <div className="flex-1 min-w-0">
-          <Topbar
-            onToggleSidebar={() => {}}
+    <NotificationsProvider>
+      <ChatSocketProvider>
+        <SidebarProvider>
+          <DashboardShell
             onOpenProfile={onOpenProfile}
             onLogout={onLogout}
             profileLabel={profileLabel}
           />
+        </SidebarProvider>
+      </ChatSocketProvider>
+    </NotificationsProvider>
+  );
+}
 
-          <main className="px-4 py-6 sm:px-6">
+function DashboardShell({ onOpenProfile, onLogout, profileLabel }) {
+  const { toggle } = useSidebar();
+  const { isWalletLinked } = useAuth();
+  const [walletModalOpen, setWalletModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isWalletLinked) setWalletModalOpen(true);
+  }, [isWalletLinked]);
+
+  return (
+    <div className="min-h-screen">
+      <ConnectWalletModal
+        open={walletModalOpen && !isWalletLinked}
+        onDismiss={() => setWalletModalOpen(false)}
+      />
+      <div className="flex min-h-screen">
+        <Sidebar />
+
+        <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+          <Topbar
+            onToggleSidebar={toggle}
+            onOpenProfile={onOpenProfile}
+            onLogout={onLogout}
+            profileLabel={profileLabel}
+            onConnectWallet={() => setWalletModalOpen(true)}
+            walletConnected={isWalletLinked}
+          />
+
+          <main className="flex min-h-0 flex-1 flex-col overflow-hidden px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <Outlet />
           </main>
         </div>

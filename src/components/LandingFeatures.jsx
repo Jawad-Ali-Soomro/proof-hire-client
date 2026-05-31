@@ -114,7 +114,7 @@ export default function LandingFeatures() {
         <GridTexture />
 
         <motion.div
-          className="relative mb-16 grid gap-10 md:mb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.1fr)] lg:items-end lg:gap-16"
+          className="relative mb-16 grid ga md:mb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.1fr)] lg:items-end lg:gap-16"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
@@ -178,7 +178,7 @@ export default function LandingFeatures() {
               whileHover={{ y: -5, transition: { ...spring, stiffness: 400 } }}
               className={`group relative flex flex-col overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface-elevated)] shadow-[0_1px_0_rgba(255,255,255,0.06)_inset] backdrop-blur-[2px] dark:shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] md:p-8 ${item.span} ${
                 item.featured
-                  ? "p-7 md:p-10"
+                  ? "p-7 md:"
                   : "p-6 md:p-8"
               }`}
             >

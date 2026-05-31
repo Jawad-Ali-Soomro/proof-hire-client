@@ -3,6 +3,19 @@
 /* Class-based dark mode (toggle on <html class="dark">) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+@keyframes sidebar-chip-shake {
+  0% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@theme {
+  --animate-sidebar-chip-shake: sidebar-chip-shake 0.42s ease-in-out;
+}
+
 :root {
   color-scheme: light;
   /* --surface: #fafafa; */
@@ -84,4 +97,82 @@ html.dark main.landing-page::after {
 
 input, textarea {
   border-radius: 15px;
+}
+
+/* Dashboard home — ambient mesh + soft motion */
+.dashboard-shell {
+  isolation: isolate;
+}
+
+.dashboard-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dashboard-glow-a {
+  width: min(420px, 55vw);
+  height: min(420px, 55vw);
+  top: -8%;
+  right: -4%;
+  background: rgba(38, 182, 156, 0.22);
+  animation: dashboard-drift-a 14s ease-in-out infinite;
+}
+
+.dashboard-glow-b {
+  width: min(360px, 48vw);
+  height: min(360px, 48vw);
+  bottom: 12%;
+  left: -6%;
+  background: rgba(59, 130, 246, 0.14);
+  animation: dashboard-drift-b 18s ease-in-out infinite;
+}
+
+html.dark .dashboard-glow-a {
+  background: rgba(38, 182, 156, 0.12);
+}
+
+html.dark .dashboard-glow-b {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+@keyframes dashboard-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-24px, 16px) scale(1.06);
+  }
+}
+
+/* Sidebar — expandable / collapsible rail */
+.sidebar-shell {
+  width: var(--sidebar-width, 16rem);
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-shell--expanded {
+  --sidebar-width: 16rem;
+}
+
+.sidebar-shell--collapsed {
+  --sidebar-width: 4.75rem;
+}
+
+.sidebar-panel {
+  width: var(--sidebar-width, 16rem);
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dashboard-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -12px) scale(1.05);
+  }
 }

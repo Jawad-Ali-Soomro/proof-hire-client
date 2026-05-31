@@ -21,5 +21,5 @@ export default function ClientOnly({ children }) {
     );
   }
 
-  return <div className="p-10">{children}</div>;
+  return <div className="min-w-0">{children}</div>;
 }

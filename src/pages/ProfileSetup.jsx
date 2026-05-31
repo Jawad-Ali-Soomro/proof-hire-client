@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { PiArrowLeft, PiArrowRight, PiCheck, PiMagnifyingGlass, PiUserCheckDuotone, PiUserDuotone } from "react-icons/pi";
+import {
+  PiArrowLeft,
+  PiArrowRight,
+  PiCheck,
+  PiMagnifyingGlass,
+  PiUserCheckDuotone,
+  PiUserDuotone,
+} from "react-icons/pi";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useWallet } from "../context/WalletContext.jsx";
 import { apiRequest, getStoredToken } from "../lib/api.js";
@@ -99,7 +106,11 @@ function ToggleRow({ selected, title, description, onClick, icon }) {
         transition={{ duration: 0.25 }}
       >
         {selected ? (
-          <PiCheck className="text-[15px] text-white" aria-hidden strokeWidth={3} />
+          <PiCheck
+            className="text-[15px] text-white"
+            aria-hidden
+            strokeWidth={3}
+          />
         ) : null}
       </motion.span>
       <span
@@ -107,12 +118,19 @@ function ToggleRow({ selected, title, description, onClick, icon }) {
           selected
             ? "text-gray-900 dark:text-white"
             : "text-gray-700 dark:text-gray-200"
-        }`}>
-          <span className="text-sm font-semibold">{title}</span>
-          {description ? (
-            <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug line-clamp-1 capitalize">{description}</span>
-          ) : null}
-          {icon && <div className="absolute right-5 top-1/2 -translate-y-1/2 text-xl">{icon}</div>}
+        }`}
+      >
+        <span className="text-sm font-semibold">{title}</span>
+        {description ? (
+          <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug line-clamp-1 capitalize">
+            {description}
+          </span>
+        ) : null}
+        {icon && (
+          <div className="absolute right-5 top-1/2 -translate-y-1/2 text-xl">
+            {icon}
+          </div>
+        )}
       </span>
     </motion.button>
   );
@@ -125,7 +143,9 @@ export default function ProfileSetup() {
 
   const steps = STEP_CONFIG;
   const [step, setStep] = useState(0);
-  const [email, setEmail] = useState(user?.email?.includes("@wallet.proofhire") ? "" : (user?.email ?? ""));
+  const [email, setEmail] = useState(
+    user?.email?.includes("@wallet.proofhire") ? "" : (user?.email ?? ""),
+  );
   const [fullName, setFullName] = useState("");
   const [bio, setBio] = useState("");
   const [role, setRole] = useState("FREELANCER");
@@ -137,13 +157,12 @@ export default function ProfileSetup() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!isConnected && !loading) navigate("/", { replace: true });
-  }, [isConnected, loading, navigate]);
+  // useEffect(() => {
+  //   if (!isConnected && !loading) navigate("/", { replace: true });
+  // }, [isConnected, loading, navigate]);
 
   useEffect(() => {
-    if (!loading && profileComplete)
-      navigate("/dashboard", { replace: true });
+    if (!loading && profileComplete) navigate("/dashboard", { replace: true });
   }, [loading, profileComplete, navigate]);
 
   useEffect(() => {
@@ -179,13 +198,13 @@ export default function ProfileSetup() {
   const toggleSkill = (skill) => {
     const key = skillKey(skill);
     setSelectedSkills((prev) =>
-      prev.includes(key) ? prev.filter((s) => s !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((s) => s !== key) : [...prev, key],
     );
   };
 
   const toggleHiringTag = (tag) => {
     setSelectedHiringTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 
@@ -206,9 +225,7 @@ export default function ProfileSetup() {
     if (step === 1) return true;
     if (step === 2) {
       if (role === "FREELANCER") return selectedSkills.length > 0;
-      return (
-        selectedHiringTags.length > 0 || servicesNotes.trim().length > 0
-      );
+      return selectedHiringTags.length > 0 || servicesNotes.trim().length > 0;
     }
     return true;
   };
@@ -352,7 +369,6 @@ export default function ProfileSetup() {
                             : "opacity-55"
                       }`}
                     >
-                     
                       <h2
                         className={`mt-1 capitalize text-base font-bold leading-snug ${
                           isCurrent
@@ -416,7 +432,10 @@ export default function ProfileSetup() {
                   </label>
                   <label className="mt-6 block">
                     <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                      Bio <span className="font-semibold uppercase">(optional)</span>
+                      Bio{" "}
+                      <span className="font-semibold uppercase">
+                        (optional)
+                      </span>
                     </span>
                     <textarea
                       value={bio}
@@ -463,7 +482,8 @@ export default function ProfileSetup() {
                       Select your skills
                     </h1>
                     <p className="mt-1 text-sm font-semibold text-gray-500 dark:text-gray-400 capitalize">
-                      Select every skill that matches what you deliver—organized by category.
+                      Select every skill that matches what you deliver—organized
+                      by category.
                     </p>
                     <div className="relative mt-6">
                       <PiMagnifyingGlass
@@ -522,7 +542,8 @@ export default function ProfileSetup() {
                       Hiring focus
                     </h1>
                     <p className="mt-1 text-sm font-semibold text-gray-500 dark:text-gray-400 capitalize">
-                      Pick the buckets that match roles you recruit for, then optionally add specifics.
+                      Pick the buckets that match roles you recruit for, then
+                      optionally add specifics.
                     </p>
                     <div className="mt-8 grid gap-2 sm:grid-cols-2">
                       {HIRING_FOCUS_OPTIONS.map((item) => (
@@ -537,7 +558,10 @@ export default function ProfileSetup() {
                     </div>
                     <label className="mt-8 block">
                       <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                        Additional context <span className="font-semibold uppercase">(optional)</span>
+                        Additional context{" "}
+                        <span className="font-semibold uppercase">
+                          (optional)
+                        </span>
                       </span>
                       <textarea
                         value={servicesNotes}
@@ -547,7 +571,6 @@ export default function ProfileSetup() {
                         placeholder="e.g. Senior Solidity for a new marketplace, 6+ month contract…"
                       />
                     </label>
-                   
                   </>
                 )
               ) : null}

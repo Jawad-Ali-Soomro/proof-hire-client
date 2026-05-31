@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   PiCaretDown,
   PiCaretLeft,
@@ -20,8 +20,13 @@ import DropdownSelect from "../components/ui/DropdownSelect.jsx";
 
 const PROFILE_MAGIC = "PH_PROFILE_JSON::";
 
+/** Safe trim for API / form values: never call `.trim` on undefined or non-strings. */
+function strTrim(v) {
+  return v == null ? "" : String(v).trim();
+}
+
 const STEPS = [
-  { id: "personal", title: "Personal information", description: "Basic account details and address information." },
+  { id: "personal", title: "Personal information", description: "account details & address information." },
   { id: "academic", title: "Education", description: "Education details and certifications." },
   { id: "projects", title: "Projects", description: "Highlights with GitHub, blog, and project images (Pinata)." },
   { id: "portfolio", title: "Portfolio", description: "GitHub and LinkedIn links (no gallery here—use Projects for images)." },
@@ -38,7 +43,7 @@ const EDUCATION_SCHOOL_OPTIONS = [
 ];
 
 function parseCompositeBio(rawBio) {
-  const src = (rawBio || "").trim();
+  const src = strTrim(rawBio);
   if (!src) {
     return {
       summary: "",
@@ -138,9 +143,9 @@ function parseCompositeBio(rawBio) {
 function educationEntryImages(entry) {
   if (!entry) return [];
   if (Array.isArray(entry.images) && entry.images.length) {
-    return entry.images.map((u) => String(u).trim()).filter(Boolean);
+    return entry.images.map((u) => strTrim(u)).filter(Boolean);
   }
-  const one = (entry.image || "").trim();
+  const one = strTrim(entry?.image);
   return one ? [one] : [];
 }
 
@@ -335,7 +340,7 @@ function AvatarStyleMultiImageUpload({
 }
 
 async function uploadDataUrlIfNeeded(dataUrl, baseFilename, token) {
-  const u = (dataUrl || "").trim();
+  const u = strTrim(dataUrl);
   if (!u || !u.startsWith("data:")) return u;
   const resBlob = await fetch(u);
   const blob = await resBlob.blob();
@@ -386,9 +391,17 @@ function ToggleRow({ selected, title, description, onClick }) {
 
 export default function ProfileEdit() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, loading, applyAuthPayload } = useAuth();
 
   const [activeStep, setActiveStep] = useState("personal");
+
+  useEffect(() => {
+    const step = searchParams.get("step");
+    if (step && STEPS.some((s) => s.id === step)) {
+      setActiveStep(step);
+    }
+  }, [searchParams]);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [summary, setSummary] = useState("");
@@ -436,48 +449,48 @@ export default function ProfileEdit() {
     const p = user.profile || {};
     const legacy = parseCompositeBio(p.bio || "");
 
-    const summaryVal = (p.summary ?? "").trim() || legacy.summary;
+    const summaryVal = strTrim(p.summary) || legacy.summary;
     setEmail(user.email || "");
     setFullName(p.fullName || "");
     setSummary(summaryVal);
-    setAddressLine1((p.addressLine1 ?? "").trim() || legacy.addressLine1);
-    setAddressLine2((p.addressLine2 ?? "").trim() || legacy.addressLine2);
-    setCity((p.city ?? "").trim() || legacy.city);
-    setStateRegion((p.state ?? "").trim() || legacy.state);
-    setCountry((p.country ?? "").trim() || legacy.country);
-    setPostalCode((p.postalCode ?? "").trim() || legacy.postalCode);
-    setGithub((p.github ?? "").trim() || legacy.github);
-    setLinkedin((p.linkedin ?? "").trim() || legacy.linkedin);
+    setAddressLine1(strTrim(p.addressLine1) || legacy.addressLine1);
+    setAddressLine2(strTrim(p.addressLine2) || legacy.addressLine2);
+    setCity(strTrim(p.city) || legacy.city);
+    setStateRegion(strTrim(p.state) || legacy.state);
+    setCountry(strTrim(p.country) || legacy.country);
+    setPostalCode(strTrim(p.postalCode) || legacy.postalCode);
+    setGithub(strTrim(p.github) || legacy.github);
+    setLinkedin(strTrim(p.linkedin) || legacy.linkedin);
 
     const fromDbEducation = Array.isArray(p.educationEntries) ? p.educationEntries : null;
     if (fromDbEducation?.length) {
       setEducationEntries(
         fromDbEducation.map((entry) => ({
-          title: (entry.title || "").trim(),
-          school: (entry.school || "").trim(),
-          startYear: (entry.startYear || "").trim(),
-          endYear: (entry.endYear || "").trim(),
-          year: (entry.year || "").trim(),
-          description: (entry.description || "").trim(),
+          title: strTrim(entry?.title),
+          school: strTrim(entry?.school),
+          startYear: strTrim(entry?.startYear),
+          endYear: strTrim(entry?.endYear),
+          year: strTrim(entry?.year),
+          description: strTrim(entry?.description),
           images: educationEntryImages(entry),
         })),
       );
     } else if (
-      legacy.educationEntries.length ||
-      legacy.educationTitle ||
-      legacy.educationSchool ||
-      legacy.educationYear ||
-      legacy.educationDescription
+      legacy?.educationEntries?.length ||
+      legacy?.educationTitle ||
+      legacy?.educationSchool ||
+      legacy?.educationYear ||
+      legacy?.educationDescription
     ) {
       setEducationEntries(
         legacy.educationEntries.length
           ? legacy.educationEntries.map((e) => ({
-              title: (e.title || "").trim(),
-              school: (e.school || "").trim(),
-              startYear: (e.startYear || "").trim(),
-              endYear: (e.endYear || "").trim(),
-              year: (e.year || "").trim(),
-              description: (e.description || "").trim(),
+              title: strTrim(e?.title),
+              school: strTrim(e?.school),
+              startYear: strTrim(e?.startYear),
+              endYear: strTrim(e?.endYear),
+              year: strTrim(e?.year),
+              description: strTrim(e?.description),
               images: educationEntryImages(e),
             }))
           : [
@@ -502,11 +515,11 @@ export default function ProfileEdit() {
     if (fromDbProjects?.length) {
       setProjectEntries(
         fromDbProjects.map((proj) => ({
-          title: (proj.title || "").trim(),
-          description: (proj.description || "").trim(),
-          year: (proj.year || "").trim(),
-          github: (proj.github || "").trim(),
-          blog: (proj.blog || "").trim(),
+          title: strTrim(proj?.title),
+          description: strTrim(proj?.description),
+          year: strTrim(proj?.year),
+          github: strTrim(proj?.github),
+          blog: strTrim(proj?.blog),
           images: Array.isArray(proj.images) ? proj.images.map(String) : [],
         })),
       );
@@ -532,21 +545,21 @@ export default function ProfileEdit() {
     setProjectBlog("");
     setProjectImages([]);
 
-    setAvatar(p.avatar || "");
+    setAvatar(p.avatar == null ? "" : String(p.avatar));
     setSelectedSkills(
-      (p.skills || "")
+      strTrim(p.skills)
         .split(",")
-        .map((s) => s.trim())
+        .map((s) => strTrim(s))
         .filter(Boolean),
     );
-    const rawServices = (p.services || "").trim();
+    const rawServices = strTrim(p.services);
     if (rawServices.includes("·")) {
-      const [tagsPart, notesPart] = rawServices.split("·").map((s) => s.trim());
-      setSelectedHiringTags(tagsPart.split(",").map((s) => s.trim()).filter(Boolean));
-      setServicesNotes(notesPart || "");
+      const [tagsPart, notesPart] = rawServices.split("·").map((s) => strTrim(s));
+      setSelectedHiringTags((tagsPart ? tagsPart.split(",") : []).map((s) => strTrim(s)).filter(Boolean));
+      setServicesNotes(strTrim(notesPart));
     } else {
       const known = new Set(HIRING_FOCUS_OPTIONS.map((x) => x.title));
-      const parts = rawServices.split(",").map((s) => s.trim()).filter(Boolean);
+      const parts = rawServices.split(",").map((s) => strTrim(s)).filter(Boolean);
       setSelectedHiringTags(parts.filter((p2) => known.has(p2)));
       setServicesNotes(parts.filter((p2) => !known.has(p2)).join(", "));
     }
@@ -623,12 +636,12 @@ export default function ProfileEdit() {
   const onUpsertEducation = () => {
     const imgs = educationImages.map(String).filter(Boolean);
     const draft = {
-      title: educationTitle.trim(),
-      school: educationSchool.trim(),
-      startYear: educationStartYear.trim(),
-      endYear: educationEndYear.trim(),
-      year: educationYear.trim(),
-      description: educationDescription.trim(),
+      title: strTrim(educationTitle),
+      school: strTrim(educationSchool),
+      startYear: strTrim(educationStartYear),
+      endYear: strTrim(educationEndYear),
+      year: strTrim(educationYear),
+      description: strTrim(educationDescription),
       images: imgs,
     };
     if (
@@ -673,11 +686,11 @@ export default function ProfileEdit() {
 
   const onUpsertProject = () => {
     const draft = {
-      title: projectTitle.trim(),
-      description: projectDescription.trim(),
-      year: projectYear.trim(),
-      github: projectGithub.trim(),
-      blog: projectBlog.trim(),
+      title: strTrim(projectTitle),
+      description: strTrim(projectDescription),
+      year: strTrim(projectYear),
+      github: strTrim(projectGithub),
+      blog: strTrim(projectBlog),
       images: projectImages.map(String),
     };
     if (
@@ -725,7 +738,7 @@ export default function ProfileEdit() {
       setError("Select at least one skill.");
       return;
     }
-    if (role === "CLIENT" && selectedHiringTags.length === 0 && !servicesNotes.trim()) {
+    if (role === "CLIENT" && selectedHiringTags.length === 0 && !strTrim(servicesNotes)) {
       setError("Select hiring fields or add notes.");
       return;
     }
@@ -735,12 +748,12 @@ export default function ProfileEdit() {
 
       const normalizedEducationEntries = educationEntries
         .map((entry) => ({
-          title: (entry.title || "").trim(),
-          school: (entry.school || "").trim(),
-          startYear: (entry.startYear || "").trim(),
-          endYear: (entry.endYear || "").trim(),
-          year: (entry.year || "").trim(),
-          description: (entry.description || "").trim(),
+          title: strTrim(entry?.title),
+          school: strTrim(entry?.school),
+          startYear: strTrim(entry?.startYear),
+          endYear: strTrim(entry?.endYear),
+          year: strTrim(entry?.year),
+          description: strTrim(entry?.description),
           images: educationEntryImages(entry),
         }))
         .filter(
@@ -776,12 +789,12 @@ export default function ProfileEdit() {
 
       const normalizedProjects = projectEntries
         .map((proj) => ({
-          title: (proj.title || "").trim(),
-          description: (proj.description || "").trim(),
-          year: (proj.year || "").trim(),
-          github: (proj.github || "").trim(),
-          blog: (proj.blog || "").trim(),
-          images: Array.isArray(proj.images) ? proj.images.map((u) => String(u).trim()).filter(Boolean) : [],
+          title: strTrim(proj?.title),
+          description: strTrim(proj?.description),
+          year: strTrim(proj?.year),
+          github: strTrim(proj?.github),
+          blog: strTrim(proj?.blog),
+          images: Array.isArray(proj.images) ? proj.images.map((u) => strTrim(u)).filter(Boolean) : [],
         }))
         .filter(
           (proj) =>
@@ -806,30 +819,30 @@ export default function ProfileEdit() {
 
       const servicesPayload = (() => {
         const tags = selectedHiringTags.join(", ");
-        const notes = servicesNotes.trim();
+        const notes = strTrim(servicesNotes);
         if (tags && notes) return `${tags} · ${notes}`;
         return tags || notes;
       })();
 
-      let avatarUrl = (avatar || "").trim();
+      let avatarUrl = strTrim(avatar);
       if (avatarUrl.startsWith("data:")) {
         avatarUrl = await uploadDataUrlIfNeeded(avatarUrl, "avatar", token);
         if (!avatarUrl) throw new Error("Avatar upload failed");
       }
 
       const body = {
-        email: email.trim().toLowerCase(),
-        fullName: fullName.trim(),
-        summary: summary.trim() || undefined,
-        bio: summary.trim() || undefined,
-        addressLine1: addressLine1.trim() || undefined,
-        addressLine2: addressLine2.trim() || undefined,
-        city: city.trim() || undefined,
-        state: stateRegion.trim() || undefined,
-        country: country.trim() || undefined,
-        postalCode: postalCode.trim() || undefined,
-        linkedin: linkedin.trim() || undefined,
-        github: github.trim() || undefined,
+        email: strTrim(email).toLowerCase(),
+        fullName: strTrim(fullName),
+        summary: strTrim(summary) || undefined,
+        bio: strTrim(summary) || undefined,
+        addressLine1: strTrim(addressLine1) || undefined,
+        addressLine2: strTrim(addressLine2) || undefined,
+        city: strTrim(city) || undefined,
+        state: strTrim(stateRegion) || undefined,
+        country: strTrim(country) || undefined,
+        postalCode: strTrim(postalCode) || undefined,
+        linkedin: strTrim(linkedin) || undefined,
+        github: strTrim(github) || undefined,
         educationEntries: educationForApi,
         projects: projectsForApi,
         avatar: avatarUrl || undefined,
@@ -853,9 +866,9 @@ export default function ProfileEdit() {
   };
 
   return (
-    <form onSubmit={onSave} className="mx-auto p-6 md:p-8">
+    <form onSubmit={onSave} className="p-6 md:p-8">
       <div className="grid gap-8 lg:grid-cols-[350px_minmax(0,1fr)]">
-        <aside className="rounded-2x h-fit lg:sticky lg:top-30 lg:z-10 lg:self-start">
+        <aside className="rounded-2x h-fit lg:sticky lg:top-5 lg:z-10 lg:self-start">
           <p className="text-xs font-bold uppercase tracking-wider text-[#26b69c]">Profile update</p>
           <ol className="mt-4 space-y-0">
             {STEPS.map((step, idx) => {
@@ -997,15 +1010,7 @@ export default function ProfileEdit() {
                   className="mt-2 w-full rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm font-medium outline-none focus:border-[#26b69c] dark:border-gray-800 dark:bg-gray-900"
                 />
               </label>
-              <label className="block md:col-span-2">
-                <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">Address line 2</span>
-                <input
-                  type="text"
-                  value={addressLine2}
-                  onChange={(e) => setAddressLine2(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm font-medium outline-none focus:border-[#26b69c] dark:border-gray-800 dark:bg-gray-900"
-                />
-              </label>
+              
               <label className="block">
                 <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">City</span>
                 <input
