@@ -82,10 +82,14 @@ function SidebarPanel({ className = "" }) {
   const { user } = useAuth();
   const { collapsed, toggle, closeMobile, mobileOpen } = useSidebar();
   const isHirer = user?.role === "CLIENT";
-  const isAdmin = user?.role === "ADMIN"
+  const isAdmin = user?.role === "ADMIN";
 
   const nav = useMemo(() => {
-    const home = { to: "/dashboard", label: "Home", icon: <IoHomeOutline size={22} className="icon" /> };
+    const home = {
+      to: "/dashboard",
+      label: "Home",
+      icon: <IoHomeOutline size={22} className="icon" />,
+    };
     if (isHirer) {
       return [
         home,
@@ -133,15 +137,15 @@ function SidebarPanel({ className = "" }) {
         // },
       ];
     }
-    if(isAdmin) {
+    if (isAdmin) {
       return [
         home,
         {
           to: "/admin/users",
           label: "Users",
-          icon: <PiUsersDuotone />
-        }
-      ]
+          icon: <PiUsersDuotone />,
+        },
+      ];
     }
     return [
       home,
@@ -181,12 +185,12 @@ function SidebarPanel({ className = "" }) {
         icon: <IoChatboxEllipsesOutline size={22} className="icon" />,
         matchPrefix: true,
       },
-      {
-        to: "/dashboard/coins",
-        label: "Coins",
-        icon: <PiCoinsDuotone size={22} className="icon" />,
-        matchPrefix: false,
-      },
+      // {
+      //   to: "/dashboard/coins",
+      //   label: "Coins",
+      //   icon: <PiCoinsDuotone size={22} className="icon" />,
+      //   matchPrefix: false,
+      // },
     ];
   }, [isHirer]);
 
@@ -196,7 +200,8 @@ function SidebarPanel({ className = "" }) {
     }
     if (item.matchPrefix) {
       return (
-        location.pathname === item.to || location.pathname.startsWith(`${item.to}/`)
+        location.pathname === item.to ||
+        location.pathname.startsWith(`${item.to}/`)
       );
     }
     return location.pathname === item.to;
@@ -206,7 +211,7 @@ function SidebarPanel({ className = "" }) {
 
   return (
     <aside
-      className={`sidebar-panel icon flex h-full flex-col border-r border-slate-200/90 bg-gradient-to-b from-white via-white to-slate-50/80 dark:border-gray-800 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 ${className}`}
+      className={`sidebar-panel icon flex h-full flex-col border-r border-slate-200/90 dark:border-gray-800 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 ${className}`}
     >
       <div
         className={`flex h-16 shrink-0 items-center icon border-b border-slate-200/80 dark:border-gray-800 ${
@@ -219,7 +224,11 @@ function SidebarPanel({ className = "" }) {
           className={`flex icon min-w-0 items-center gap-2.5 ${collapsed ? "justify-center" : ""}`}
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl  bg-gradient-to-br from-[#26b69c] to-emerald-600 shadow-md shadow-[#26b69c]/25">
-            <img src="/logo.svg" alt="" className="h-5 w-5 brightness-0 invert" />
+            <img
+              src="/logo.svg"
+              alt=""
+              className="h-5 w-5 brightness-0 invert"
+            />
           </span>
           <AnimatePresence initial={false}>
             {!collapsed ? (
@@ -265,8 +274,6 @@ function SidebarPanel({ className = "" }) {
           />
         ))}
       </nav>
-
- 
     </aside>
   );
 }

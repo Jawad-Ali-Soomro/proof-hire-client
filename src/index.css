@@ -96,7 +96,7 @@ html.dark main.landing-page::after {
 
 
 input, textarea {
-  border-radius: 15px;
+  border-radius: 20px;
 }
 
 /* Dashboard home — ambient mesh + soft motion */

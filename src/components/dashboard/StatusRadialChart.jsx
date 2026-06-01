@@ -260,40 +260,6 @@ export default function StatusRadialChart({
                       className="pointer-events-none transition-all duration-200"
                       style={{ opacity: dim ? 0.28 : 1 }}
                     />
-                    <polyline
-                      points={`${a.anchorPt.x},${a.anchorPt.y} ${a.elbowPt.x},${a.elbowPt.y} ${a.textX},${a.labelPt.y}`}
-                      fill="none"
-                      stroke={lineColor}
-                      strokeWidth={1.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="pointer-events-none transition-opacity duration-200"
-                      style={{ opacity: dim ? 0.35 : 1 }}
-                    />
-                    <text
-                      x={a.textX}
-                      y={a.labelPt.y - 6}
-                      textAnchor={a.anchor}
-                      className="pointer-events-none text-[14px] font-semibold transition-opacity duration-200 dark:fill-slate-200"
-                      style={{
-                        fill: labelTitle,
-                        opacity: dim ? 0.4 : 1,
-                      }}
-                    >
-                      {a.label}
-                    </text>
-                    <text
-                      x={a.textX}
-                      y={a.labelPt.y + 14}
-                      textAnchor={a.anchor}
-                      className="pointer-events-none text-[14px] font-semibold tabular-nums transition-opacity duration-200"
-                      style={{
-                        fill: labelPct,
-                        opacity: dim ? 0.4 : 1,
-                      }}
-                    >
-                      {a.percent}%
-                    </text>
                   </g>
                 );
               })

@@ -369,7 +369,7 @@ export default function ClientTrackProjects() {
             onClick={closeDrawer}
           />
           <div
-            className="relative flex h-full w-full max-w-lg flex-col border-l border-slate-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
+            className="relative flex icon h-full w-full max-w-lg flex-col border-l border-slate-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
             role="dialog"
             aria-modal="true"
             aria-labelledby="client-job-drawer-title"

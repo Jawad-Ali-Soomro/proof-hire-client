@@ -1,7 +1,9 @@
 *  {
-  font-family: "Finlandica Headline";
+  /* font-family: "Finlandica Headline"; */
+  font-family: "Saira";
   /* letter-spacing: 1px; */
   /* font-weight: 900 !important; */
+  border-radius: 20px;
 }
 
 button {
@@ -14,4 +16,13 @@ h1 {
 
 p {
   text-align: justify;
+}
+
+.icon {
+  border-radius: 0;
+}
+
+
+button {
+  text-transform: capitalize;
 }

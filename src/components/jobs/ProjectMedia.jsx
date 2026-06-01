@@ -193,12 +193,12 @@ export function MultiImageUpload({
 }) {
   const has = urls.length > 0;
   return (
-    <div className="w-full">
-      <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</span>
+    <div className="w-full ">
+      {/* <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</span> */}
       <div className="mt-2 flex flex-wrap items-stretch gap-2">
         <label
           htmlFor={inputId}
-          className="flex min-h-[120px] min-w-[200px] flex-1 cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/70 p-4 transition hover:border-[#26b69c] hover:bg-[#26b69c]/[0.06] dark:border-gray-700 dark:bg-gray-900/60 dark:hover:border-[#26b69c]/50"
+          className="flex min-h-[120px] min-w-[200px] flex-1 cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/70 p-4 transition hover:border-[#26b69c] hover:bg-[#26b69c]/[0.06] dark:border-gray-700 dark:bg-black dark:hover:border-[#26b69c]/50"
         >
           <div className="relative h-16 w-16 shrink-0">
             {!has ? (
@@ -246,7 +246,7 @@ export function MultiImageUpload({
                 e.stopPropagation();
                 onOpenGallery();
               }}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#26b69c]/35 bg-white text-[#26b69c] shadow-sm transition hover:bg-[#26b69c]/[0.08] dark:bg-gray-800 dark:hover:bg-[#26b69c]/15"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#26b69c]/35 bg-white text-[#26b69c] shadow-sm transition hover:bg-[#26b69c]/[0.08] dark:bg-transparent"
               aria-label="Preview images"
             >
               <PiImagesDuotone size={22} aria-hidden />
@@ -385,7 +385,7 @@ export function JobLinksEditor({
           type="button"
           onClick={add}
           disabled={rows.length >= max}
-          className="inline-flex items-center gap-1 rounded-lg border border-[#26b69c]/40 bg-[#26b69c]/10 px-3 py-1.5 text-xs font-bold text-[#156b59] disabled:opacity-40 dark:text-[#56d9c0]"
+          className="flex justify-center items-center w-[120px] h-11 items-center gap-1 rounded-lg bg-[#26b69c]/10 px-3 py-1.5 text-xs font-bold text-[#156b59] disabled:opacity-40 dark:text-[#56d9c0]"
         >
           <PiPlus size={14} aria-hidden />
           Add link
@@ -395,7 +395,7 @@ export function JobLinksEditor({
         {rows.map((row, i) => (
           <li
             key={i}
-            className="grid gap-2 rounded-xl  border border-gray-200 bg-gray-50/80 p-3 dark:border-gray-700 dark:bg-gray-800/50 sm:grid-cols-[1fr_1.4fr_auto]"
+            className="grid gap-2 rounded-xl border-gray-200  py-3 dark:border-gray-700 dark:bg-black sm:grid-cols-[1fr_1.4fr_auto]"
           >
             <label className="block min-w-0">
               <span className="text-[10px] font-bold uppercase text-gray-500">Title</span>
@@ -419,7 +419,7 @@ export function JobLinksEditor({
               <button
                 type="button"
                 onClick={() => remove(i)}
-                className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-bold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                className="flex items-center justify-center gap-1 rounded-lg w-11 h-11 border text-xs font-bold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
                 aria-label="Remove link"
               >
                 <PiTrashDuotone size={16} aria-hidden />

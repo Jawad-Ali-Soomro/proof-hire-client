@@ -552,7 +552,7 @@ export default function ContractsPage() {
             onClick={closeDrawer}
           />
           <div
-            className="relative flex h-full w-full max-w-lg flex-col border-l border-slate-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
+            className="relative flex icon h-full w-full max-w-lg flex-col border-l border-slate-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900"
             role="dialog"
             aria-modal="true"
             aria-labelledby="contract-drawer-title"
@@ -763,18 +763,18 @@ export default function ContractsPage() {
                               {open ? (
                                 <div className="space-y-2 border-t border-slate-100 px-3 py-3 dark:border-gray-800">
                                   <MilestoneDetailPanel milestone={m} emptyText="No details." />
-                                  {m.amount != null ? (
-                                    <p>
-                                      <span className="font-medium text-slate-700 dark:text-slate-300">Amount: </span>
-                                      ${Number(m.amount).toLocaleString()}
+                                  <div className="flex gap-2">
+                                    {m.amount != null ? (
+                                    <p className="flex px-5 items-center justify-center py-2 bg-green-200 text-sm dark:bg-green-800">
+                                      USDT - {Number(m.amount).toLocaleString()} /=
                                     </p>
                                   ) : null}
                                   {m.dueDate ? (
-                                    <p>
-                                      <span className="font-medium text-slate-700 dark:text-slate-300">Due: </span>
+                                    <p className="flex px-5 items-center justify-center py-2 bg-gray-100 text-sm dark:bg-gray-800">
                                       {m.dueDate}
                                     </p>
                                   ) : null}
+                                  </div>
                                   {/* {isClient ? (
                                     <p className="text-xs text-slate-500 dark:text-slate-400">
                                       Status: {statusLabel(m.status)}

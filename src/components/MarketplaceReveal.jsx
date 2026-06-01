@@ -123,12 +123,11 @@ export default function MarketplaceReveal() {
           <h2 className="text-balance text-3xl capitalize font-bold leading-[1.12] tracking-tight text-[var(--text)] sm:text-4xl lg:text-[2.65rem]">
             Showcase, hire,{" "}
             <span className="text-[#26b69c]">
-              &amp; settle on-chain
-              <br />
+              &amp; settle on <br /> chain
             </span>{" "}
             in one place.
           </h2>
-          <p className="mt-5 text-justify capitalize font-semibold max-w-[calc(100%-275px)] text-pretty text-base leading-relaxed text-[var(--text-muted)] sm:text-lg">
+          <p className="mt-5 text-justify capitalize font-semibold max-w-[calc(100%-300px)] text-pretty text-base leading-relaxed text-[var(--text-muted)] sm:text-lg">
             A living network where freelancers and recruiters meet - portfolios,
             escrow, and attestations—Proof Hire keeps the creative work center
             stage.

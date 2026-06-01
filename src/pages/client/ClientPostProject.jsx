@@ -216,7 +216,7 @@ export default function ClientPostProject() {
           <p className="mt-8 text-sm font-semibold text-red-600 dark:text-red-400">{loadError}</p>
         ) : (
           <form onSubmit={onSubmit} className="mt-8 space-y-8">
-            <section className="border-b py-6 border-gray-200 dark:border-gray-700">
+            <section className="border-b icon py-6 border-gray-200 dark:border-gray-700">
               <div className="mt-4 grid gap-5 sm:grid-cols-2">
                 <label className="block sm:col-span-1">
                   <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
@@ -262,7 +262,7 @@ export default function ClientPostProject() {
               </div>
             </section>
 
-            <section className="border-b py-6 border-gray-200 dark:border-gray-700">
+            <section className="border-b icon py-6 border-gray-200 dark:border-gray-700">
               <h2 className="text-sm font-bold text-gray-900 dark:text-white">Scope & visuals</h2>
               <div className="mt-4 grid gap-5 lg:grid-cols-2">
                 <label className="block">
@@ -316,7 +316,7 @@ export default function ClientPostProject() {
               </div>
             </section>
 
-            <section className="border-b py-6 border-gray-200 dark:border-gray-700">
+            <section className="border-b py-6 border-gray-200 icon dark:border-gray-700">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-sm font-bold text-gray-900 dark:text-white">Milestones</h2>
                 <button
@@ -334,7 +334,7 @@ export default function ClientPostProject() {
                 {milestones.map((m, idx) => (
                   <div
                     key={idx}
-                    className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-gray-800/50"
+                    className="rounded-xl py-4 dark:border-gray-700 dark:bg-black"
                   >
                     <p className="text-[11px] font-bold uppercase tracking-wide text-[#26b69c]">
                       Milestone {idx + 1}
@@ -446,7 +446,7 @@ export default function ClientPostProject() {
                   : "Publishing…"
                 : isEdit
                   ? "Save changes"
-                  : "Publish project"}
+                  : "Publish Project"}
             </button>
           </form>
         )}

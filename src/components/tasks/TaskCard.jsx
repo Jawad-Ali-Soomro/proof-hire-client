@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { PiChatCircleDotsDuotone, PiCheck } from "react-icons/pi";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 function displayName(user) {
   return user?.fullName?.trim() || user?.username || "User";
@@ -87,7 +88,7 @@ export default function TaskCard({
           to={`/dashboard/messages/${messageUserId}`}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#26b69c]/30 bg-[#26b69c]/5 py-2.5 text-sm font-semibold text-[#156b59] transition hover:bg-[#26b69c]/10 dark:text-[#56d9c0]"
         >
-          <PiChatCircleDotsDuotone size={18} aria-hidden />
+          <IoChatboxEllipsesOutline size={18} aria-hidden />
           Message
         </Link>
       ) : null}

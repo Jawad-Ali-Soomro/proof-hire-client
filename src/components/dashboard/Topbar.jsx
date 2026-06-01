@@ -29,7 +29,7 @@ export default function Topbar({
     damping: 28,
   };
   return (
-    <header className="sticky top-0 icon z-40 border-b border-gray-200 bg-white/90 backdrop-blur dark:border-gray-700 dark:bg-gray-900/85">
+    <header className="sticky top-0 icon z-40 border-b border-gray-200 bg-white/90 backdrop-blur dark:border-gray-700 dark:bg-black">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
       <div className="flex min-w-0 items-center gap-3">
       <motion.button

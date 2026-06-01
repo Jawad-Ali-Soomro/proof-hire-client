@@ -249,7 +249,7 @@ function AvatarStyleMultiImageUpload({
       <div className="mt-2 flex flex-wrap items-stretch gap-2">
         <label
           htmlFor={inputId}
-          className="flex min-h-[130px] min-w-[200px] flex-1 cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/70 p-4 transition hover:border-[#26b69c] hover:bg-[#26b69c]/[0.06] dark:border-gray-700 dark:bg-gray-900/60 dark:hover:border-[#26b69c]/50"
+          className="flex min-h-[90px] min-w-[200px] flex-1 cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/70 p-4 transition hover:border-[#26b69c] hover:bg-[#26b69c]/[0.06] dark:border-gray-700 dark:bg-gray-900/60 dark:hover:border-[#26b69c]/50"
         >
           <div className="relative h-16 w-16 shrink-0">
             {!has ? (
@@ -435,9 +435,9 @@ export default function ProfileEdit() {
   const [selectedHiringTags, setSelectedHiringTags] = useState([]);
   const [servicesNotes, setServicesNotes] = useState("");
   const [openSkillGroups, setOpenSkillGroups] = useState(() =>
-    Object.fromEntries(SKILL_CATEGORIES.map((c) => [c.title, true])),
+    Object.fromEntries(SKILL_CATEGORIES.map((c) => [c.title, false])),
   );
-  const [openFieldGroups, setOpenFieldGroups] = useState({ primary: true, notes: true });
+  const [openFieldGroups, setOpenFieldGroups] = useState({ primary: false, notes: false });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [imageGallery, setImageGallery] = useState(null);
@@ -866,7 +866,7 @@ export default function ProfileEdit() {
   };
 
   return (
-    <form onSubmit={onSave} className="p-6 md:p-8">
+    <form onSubmit={onSave} className="p-6 md:p-6">
       <div className="grid gap-8 lg:grid-cols-[350px_minmax(0,1fr)]">
         <aside className="rounded-2x h-fit lg:sticky lg:top-5 lg:z-10 lg:self-start">
           <p className="text-xs font-bold uppercase tracking-wider text-[#26b69c]">Profile update</p>
@@ -933,7 +933,7 @@ export default function ProfileEdit() {
           <h1 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white capitalize">Update your profile</h1>
 
           {activeStep === "personal" ? (
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
               <div className="grid grid-cols-1 md:grid-cols-2 col-span-2 gap-4">
               <div className="w-full">
                 <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">Avatar</span>
@@ -1052,7 +1052,7 @@ export default function ProfileEdit() {
 
           {activeStep === "academic" ? (
             <div className="mt-6">
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-2">
                 <label className="block">
                   <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                     Education title
@@ -1110,7 +1110,7 @@ export default function ProfileEdit() {
                   <textarea
                     value={educationDescription}
                     onChange={(e) => setEducationDescription(e.target.value)}
-                    rows={6}
+                    rows={3}
                     className="mt-2 w-full resize-none rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm font-medium outline-none focus:border-[#26b69c] dark:border-gray-800 dark:bg-gray-900"
                   />
                 </label>
@@ -1245,7 +1245,7 @@ export default function ProfileEdit() {
 
           {activeStep === "projects" ? (
             <div className="mt-6">
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-2">
                 <label className="block">
                   <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                     Project title
@@ -1273,7 +1273,7 @@ export default function ProfileEdit() {
                   <textarea
                     value={projectDescription}
                     onChange={(e) => setProjectDescription(e.target.value)}
-                    rows={5}
+                    rows={3}
                     className="mt-2 w-full resize-none rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm font-medium outline-none focus:border-[#26b69c] dark:border-gray-800 dark:bg-gray-900"
                   />
                 </label>
@@ -1431,7 +1431,7 @@ export default function ProfileEdit() {
           ) : null}
 
           {activeStep === "portfolio" ? (
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
               <label className="block">
                 <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                   Github link
